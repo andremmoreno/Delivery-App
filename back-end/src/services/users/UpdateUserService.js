@@ -5,8 +5,8 @@ const { User } = require('../../database/models');
 const { badRequest } = ApiError;
 const { validateUser } = require('../../validations');
 
-const UpdateUserService = async (id, user) => {
-  const error = validateUser(user);
+const UpdateUserService = async (id, body) => {
+  const error = validateUser(body);
 
   if (error) return badRequest(error);
 
@@ -14,7 +14,7 @@ const UpdateUserService = async (id, user) => {
 
   if (!userExists) return badRequest('User not found!');
 
-  const { password, ...userWithoutPassword } = user;
+  const { password, ...userWithoutPassword } = body;
 
   const updatedUser = await User.update(
     { ...userWithoutPassword, password: md5(password) }, { where: { id } },
